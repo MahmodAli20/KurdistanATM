@@ -36,3 +36,14 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+
+# Local notes and build artefacts - never commit.
+# key.txt in particular has held the keystore password; a password in public
+# git history is found by automated secret scanners within minutes, and git
+# history cannot be edited once others have cloned it.
+key.txt
+key*.txt
+apk for testing/
+*.apk
+*.aab
+.claude/
