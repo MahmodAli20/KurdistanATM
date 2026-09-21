@@ -1,0 +1,38 @@
+# Flutter / Dart
+app/.dart_tool/
+app/.flutter-plugins-dependencies
+app/build/
+app/.idea/
+**/*.iml
+
+# Node
+scripts/node_modules/
+scripts/package-lock.json
+
+# Python pipeline cache
+data/.cache/
+__pycache__/
+*.pyc
+
+# Firebase local state
+.firebase/
+*-debug.log
+
+# ---------------------------------------------------------------------------
+# SIGNING KEYS - never commit these.
+#
+# If the keystore or its password is lost, Google Play will refuse every future
+# update of this app. There is no recovery process. Back both up somewhere
+# outside this repository that will still exist in five years.
+# ---------------------------------------------------------------------------
+*.jks
+*.keystore
+**/key.properties
+
+# Firebase app config contains public client identifiers rather than secrets,
+# so lib/firebase_options.dart and google-services.json are committed on
+# purpose - the security rules are what protect the data, not these files.
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,238 @@
+/* Kurdistan ATM - policy site
+ *
+ * Deliberately one small stylesheet with no framework and no build step: this
+ * has to be hostable on GitHub Pages by dropping a folder in, and readable by
+ * anyone who opens it in a year.
+ *
+ * The audience reads Sorani and Arabic, so the whole thing flips to RTL rather
+ * than bolting direction on per element.
+ */
+
+:root {
+  --ink: #16241f;
+  --ink-soft: #55635e;
+  --bg: #f7faf9;
+  --card: #ffffff;
+  --line: #dfe7e4;
+  --brand: #00695c;
+  --brand-soft: #e2f0ed;
+  --radius: 14px;
+  --max: 720px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #e8efec;
+    --ink-soft: #9fb0aa;
+    --bg: #0f1614;
+    --card: #17211e;
+    --line: #26332f;
+    --brand: #5fcfbe;
+    --brand-soft: #16302c;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Vazirmatn", "Segoe UI", system-ui, -apple-system, sans-serif;
+  /* Arabic script needs more leading than Latin metrics assume. */
+  line-height: 1.75;
+  font-size: 17px;
+}
+
+/* Latin reads fine tighter; only the RTL languages need the extra air. */
+html[lang="en"] body { line-height: 1.6; }
+
+/* Never positive on connected Arabic script - it prises the joins apart. */
+h1, h2, h3, .btn, .pill { letter-spacing: 0; }
+
+.wrap {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 24px 20px 72px;
+}
+
+/* ---------------------------------------------------------------- header */
+
+header {
+  border-bottom: 1px solid var(--line);
+  background: var(--card);
+}
+
+.bar {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.mark {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--brand);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+  flex: none;
+}
+
+.spacer { flex: 1; }
+
+/* --------------------------------------------------------- language picker */
+
+.langs {
+  display: flex;
+  gap: 4px;
+  background: var(--brand-soft);
+  padding: 4px;
+  border-radius: 999px;
+}
+
+.langs button {
+  border: 0;
+  background: transparent;
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 14px;
+  padding: 5px 13px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.langs button[aria-pressed="true"] {
+  background: var(--card);
+  color: var(--brand);
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+/* ------------------------------------------------------------------- text */
+
+h1 { font-size: 28px; margin: 28px 0 6px; font-weight: 800; }
+h2 { font-size: 20px; margin: 34px 0 8px; font-weight: 700; }
+h3 { font-size: 17px; margin: 22px 0 6px; font-weight: 700; }
+
+p, li { color: var(--ink); margin: 10px 0; }
+
+.lede { color: var(--ink-soft); font-size: 16px; margin-top: 0; }
+
+.updated {
+  color: var(--ink-soft);
+  font-size: 14px;
+  margin: 0 0 8px;
+}
+
+ul { padding-inline-start: 22px; margin: 10px 0; }
+li { margin: 7px 0; }
+
+a { color: var(--brand); }
+
+strong { font-weight: 700; }
+
+/* ------------------------------------------------------------------ cards */
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin: 18px 0;
+}
+
+.card h2, .card h3 { margin-top: 0; }
+
+.note {
+  background: var(--brand-soft);
+  border: 1px solid transparent;
+}
+
+/* --------------------------------------------------------------- data list */
+
+.rows { border-top: 1px solid var(--line); margin-top: 14px; }
+
+.row {
+  display: flex;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.row .what { font-weight: 700; min-width: 190px; flex: none; }
+.row .detail { color: var(--ink-soft); flex: 1; min-width: 200px; }
+
+/* ---------------------------------------------------------------- buttons */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: var(--brand);
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 20px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 16px;
+  margin: 6px 8px 6px 0;
+}
+
+.btn.ghost {
+  background: transparent;
+  color: var(--brand);
+  border: 1.5px solid var(--brand);
+}
+
+/* Phone numbers and other Latin runs must not be reordered inside RTL text. */
+.ltr {
+  direction: ltr;
+  unicode-bidi: isolate;
+  display: inline-block;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+footer {
+  border-top: 1px solid var(--line);
+  margin-top: 40px;
+  padding-top: 18px;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+footer a { margin-inline-end: 14px; display: inline-block; }
+
+/* --------------------------------------------------------------- language */
+
+/* Only the active language is in the document flow. Hidden rather than
+ * removed so the page works with JavaScript disabled - see i18n.js. */
+.lang { display: none; }
+.lang.on { display: block; }
+
+@media (max-width: 480px) {
+  body { font-size: 16px; }
+  h1 { font-size: 24px; }
+  .row .what { min-width: 100%; }
+}
