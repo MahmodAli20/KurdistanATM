@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "40647075508",
+    "project_id": "atm-finder-4406e",
+    "storage_bucket": "atm-finder-4406e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:40647075508:android:a30542dec5e1b69371d9e1",
+        "android_client_info": {
+          "package_name": "iq.krd.atmfinder.atm_finder"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUI_5md4_S7RChXD41XjIJFW-8O0QAXc4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:40647075508:android:1148758e163c09bc71d9e1",
+        "android_client_info": {
+          "package_name": "iq.krd.kurdistanatm"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUI_5md4_S7RChXD41XjIJFW-8O0QAXc4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,95 @@
+rules_version = '2';
+
+// Security model for the ATM status database.
+//
+// There are no user accounts. Every install signs in anonymously, which costs
+// nothing, shows no login screen, and collects no personal data - but it gives
+// each writer a stable uid that these rules can hold to account.
+//
+// What these rules CAN enforce: only signed-in clients write; documents keep
+// the exact shape the app expects; timestamps are the server's, not the
+// caller's; status values come from a fixed set; a city's machine list can grow
+// but can never be wiped; the audit log is append-only and immutable.
+//
+// What they CANNOT enforce: that the reporter was physically at the machine.
+// Firestore has no idea where a caller is standing, so the 100 m proximity gate
+// lives in the app and a determined attacker could bypass it by calling the API
+// directly. Three things limit the damage: every report decays to nothing
+// within 12 hours, the immutable `reports` log allows any poisoned city
+// document to be rebuilt, and enabling App Check (free) blocks callers that are
+// not the genuine app. Turn App Check on before any public launch.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function knownCity(city) {
+      return city in [
+        'erbil', 'sulaymaniyah', 'duhok', 'zakho',
+        'soran', 'ranya', 'halabja', 'kirkuk', 'other'
+      ];
+    }
+
+    function knownStatus(status) {
+      return status in ['hasCash', 'noCash', 'outOfService', 'longQueue'];
+    }
+
+    // Shape check for the aggregate document the app maintains client-side.
+    function validCityDoc() {
+      let incoming = request.resource.data;
+      return incoming.keys().hasOnly(['atms', 'updatedAt'])
+             && incoming.updatedAt == request.time
+             && incoming.atms is map
+             // Bounds growth well below Firestore's 1 MiB document ceiling.
+             && incoming.atms.keys().size() <= 2000;
+    }
+
+    // Crowd-reported machine status, one document per city.
+    match /status/{city} {
+      // Anyone may read, including users who have not signed in yet: the map
+      // should show status while anonymous auth is still completing.
+      allow read: if true;
+
+      allow create: if signedIn() && knownCity(city) && validCityDoc();
+
+      allow update: if signedIn()
+                    && knownCity(city)
+                    && validCityDoc()
+                    // Machines may be added but never removed en masse, so a
+                    // single malicious write cannot blank a whole city.
+                    && request.resource.data.atms.keys().size()
+                       >= resource.data.atms.keys().size();
+
+      allow delete: if false;
+    }
+
+    // Append-only audit log. Clients write here but never read it back - the
+    // app gets everything it needs from the city document, and keeping this
+    // unreadable means a scraper cannot mine per-device reporting histories.
+    match /reports/{reportId} {
+      allow read: if false;
+
+      allow create: if signedIn()
+                    && request.resource.data.keys().hasOnly(
+                         ['atmId', 'city', 'status', 'uid', 'createdAt'])
+                    && request.resource.data.uid == request.auth.uid
+                    && request.resource.data.createdAt == request.time
+                    && knownCity(request.resource.data.city)
+                    && knownStatus(request.resource.data.status)
+                    && request.resource.data.atmId is string
+                    && request.resource.data.atmId.size() > 0
+                    && request.resource.data.atmId.size() <= 64;
+
+      // Immutable once written. This is the whole point of the log.
+      allow update, delete: if false;
+    }
+
+    // Anything not matched above is denied.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

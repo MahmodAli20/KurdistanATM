@@ -1,0 +1,13 @@
+{
+  "name": "atm-finder-scripts",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Maintenance scripts for the Kurdistan ATM Finder backend",
+  "scripts": {
+    "test:rules": "node rules_test.mjs"
+  },
+  "dependencies": {
+    "firebase": "^12.19.0"
+  }
+}
